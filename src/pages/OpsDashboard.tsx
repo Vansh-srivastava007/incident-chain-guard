@@ -73,36 +73,57 @@ const OpsDashboard = () => {
     if (!selectedIncident) return;
 
     const contactInfo = {
-      police: { name: 'NYPD Emergency', number: '911' },
-      hospital: { name: 'Mount Sinai Emergency', number: '(212) 241-6500' },
-      fire: { name: 'FDNY Emergency', number: '911' }
+      police: { name: 'NYPD Emergency Dispatch', number: '911', dept: 'Police Department' },
+      hospital: { name: 'Mount Sinai Emergency', number: '(212) 241-6500', dept: 'Emergency Medical' },
+      fire: { name: 'FDNY Emergency Response', number: '911', dept: 'Fire Department' }
     };
 
     const contact = contactInfo[type];
     
-    // Mock PSTN/Twilio integration
+    // Show initial call notification
     toast({
-      title: `🚨 MOCK Call Initiated`,
-      description: (
-        <div className="space-y-2">
-          <p>Calling {contact.name} at {contact.number}</p>
-          <div className="flex items-center gap-2">
-            <StatusBadge status="" variant="mock">MOCK INTEGRATION</StatusBadge>
-            <span className="text-xs">Replace with Twilio API</span>
-          </div>
-        </div>
-      ),
-      duration: 5000,
+      title: `📞 Initiating Emergency Call`,
+      description: `Connecting to ${contact.dept}...`,
     });
 
-    // Add to audit log
-    const updatedIncident = addAuditLog(
-      selectedIncident,
-      `Emergency Call - ${type.toUpperCase()}`,
-      `Called ${contact.name} (${contact.number}) - MOCK`
-    );
+    // Simulate call connection process
+    setTimeout(() => {
+      toast({
+        title: `🚨 EMERGENCY CALL CONNECTED (Mock)`,
+        description: (
+          <div className="space-y-3">
+            <div className="font-semibold">Connected to: {contact.name}</div>
+            <div className="text-sm space-y-1">
+              <p>📍 Location: {selectedIncident.location.lat.toFixed(4)}, {selectedIncident.location.lng.toFixed(4)}</p>
+              <p>🚨 Incident: {selectedIncident.type.toUpperCase()}</p>
+              <p>⚡ Severity: {selectedIncident.severity}/10</p>
+              <p>👤 Reporter: {selectedIncident.reporterName || 'Anonymous'}</p>
+            </div>
+            <div className="flex items-center gap-2">
+              <StatusBadge status="" variant="mock">MOCK PSTN/TWILIO</StatusBadge>
+              <span className="text-xs">Replace with Twilio Voice API</span>
+            </div>
+            <div className="text-xs bg-muted p-2 rounded">
+              📞 Call Duration: 00:45 (simulated)
+              <br />
+              📋 Incident ID shared with dispatcher
+              <br />
+              🚛 Units dispatched to location
+            </div>
+          </div>
+        ),
+        duration: 10000,
+      });
 
-    updateIncident(updatedIncident);
+      // Add detailed audit log
+      const updatedIncident = addAuditLog(
+        selectedIncident,
+        `Emergency Response - ${contact.dept.toUpperCase()}`,
+        `Connected to ${contact.name} (${contact.number}). Incident details shared, units dispatched. Call ID: MOCK-${Date.now()}`
+      );
+
+      updateIncident(updatedIncident);
+    }, 1500);
   };
 
   const handleAcknowledge = () => {
@@ -148,6 +169,12 @@ const OpsDashboard = () => {
 
     setIsAnchoring(true);
 
+    // Show initial anchoring notification
+    toast({
+      title: "🔗 Initiating Blockchain Anchor",
+      description: "Preparing evidence for blockchain submission...",
+    });
+
     // Update to anchoring status
     let updatedIncident: Incident = {
       ...selectedIncident,
@@ -155,7 +182,21 @@ const OpsDashboard = () => {
     };
     updateIncident(updatedIncident);
 
-    // Simulate blockchain anchoring process
+    // Simulate blockchain anchoring process with multiple steps
+    setTimeout(() => {
+      toast({
+        title: "⛓️ Computing Evidence Hash",
+        description: "Generating cryptographic proof of evidence integrity...",
+      });
+    }, 1000);
+
+    setTimeout(() => {
+      toast({
+        title: "📡 Broadcasting to Blockchain",
+        description: "Submitting transaction to Polygon network...",
+      });
+    }, 2500);
+
     setTimeout(() => {
       const txId = generateMockTxId();
       const explorerUrl = generateBlockchainExplorerUrl(txId);
@@ -170,20 +211,29 @@ const OpsDashboard = () => {
       updatedIncident = addAuditLog(
         updatedIncident, 
         'Evidence Anchored to Blockchain', 
-        `TX: ${txId} (MOCK)`
+        `Transaction confirmed on Polygon. TX ID: ${txId} (MOCK)`
       ) as Incident;
 
       updateIncident(updatedIncident);
       setIsAnchoring(false);
 
       toast({
-        title: "🔗 Evidence Anchored (Mock)",
+        title: "✅ Blockchain Anchor Complete (Mock)",
         description: (
-          <div className="space-y-2">
-            <p>Evidence hash recorded on blockchain</p>
+          <div className="space-y-3">
+            <p>Evidence successfully anchored to blockchain!</p>
             <div className="flex items-center gap-2">
-              <StatusBadge status="" variant="mock">MOCK BLOCKCHAIN</StatusBadge>
+              <StatusBadge status="" variant="mock">MOCK POLYGON</StatusBadge>
               <span className="text-xs">Replace with Polygon API</span>
+            </div>
+            <div className="text-xs bg-muted p-2 rounded font-mono">
+              🔗 TX Hash: {txId}
+              <br />
+              📋 Evidence Hash: {updatedIncident.chainHash?.slice(0, 32)}...
+              <br />
+              ⛽ Gas Used: 0.00123 MATIC (mock)
+              <br />
+              🕒 Block Time: {new Date().toLocaleTimeString()}
             </div>
             <a 
               href={explorerUrl} 
@@ -191,28 +241,91 @@ const OpsDashboard = () => {
               rel="noopener noreferrer"
               className="text-xs text-blue-500 hover:underline flex items-center gap-1"
             >
-              View on Explorer (Mock) <ExternalLink className="w-3 h-3" />
+              🔍 View on PolygonScan (Mock) <ExternalLink className="w-3 h-3" />
             </a>
           </div>
         ),
-        duration: 8000,
+        duration: 12000,
       });
-    }, 2000);
+    }, 4000);
   };
 
   const handleVerifyHash = () => {
-    if (!selectedIncident?.chainHash) return;
+    if (!selectedIncident?.chainHash) {
+      toast({
+        title: "No Evidence to Verify",
+        description: "Please anchor evidence first before verification.",
+        variant: "destructive"
+      });
+      return;
+    }
 
-    // Mock hash verification
-    const isValid = Math.random() > 0.1; // 90% success rate for demo
-
+    // Show verification process
     toast({
-      title: isValid ? "✅ Hash Verified" : "❌ Hash Verification Failed",
-      description: isValid 
-        ? "Evidence integrity confirmed - no tampering detected."
-        : "Warning: Evidence may have been tampered with!",
-      variant: isValid ? "default" : "destructive"
+      title: "🔍 Verifying Hash Integrity...",
+      description: "Checking evidence against blockchain records...",
     });
+
+    // Simulate verification delay
+    setTimeout(() => {
+      // Mock hash verification - 95% success rate for demo
+      const isValid = Math.random() > 0.05;
+      
+      if (isValid) {
+        toast({
+          title: "✅ Hash Verification Successful",
+          description: (
+            <div className="space-y-2">
+              <p>Evidence integrity confirmed - no tampering detected.</p>
+              <div className="flex items-center gap-2">
+                <StatusBadge status="" variant="mock">MOCK VERIFICATION</StatusBadge>
+                <span className="text-xs">Production: Use Polygon API</span>
+              </div>
+              <div className="text-xs font-mono bg-muted p-2 rounded">
+                Original Hash: {selectedIncident.chainHash?.slice(0, 32)}...
+                <br />
+                Current Hash: {selectedIncident.chainHash?.slice(0, 32)}...
+                <br />
+                Status: ✅ MATCH
+              </div>
+            </div>
+          ),
+          duration: 8000,
+        });
+
+        // Add to audit log
+        const updatedIncident = addAuditLog(
+          selectedIncident,
+          'Hash Verification - SUCCESS',
+          'Evidence integrity confirmed via blockchain verification (MOCK)'
+        );
+        updateIncident(updatedIncident);
+      } else {
+        toast({
+          title: "❌ Hash Verification Failed",
+          description: (
+            <div className="space-y-2">
+              <p>⚠️ Warning: Evidence may have been tampered with!</p>
+              <div className="text-xs font-mono bg-destructive/10 p-2 rounded">
+                Hash Mismatch Detected
+                <br />
+                Investigation Required
+              </div>
+            </div>
+          ),
+          variant: "destructive",
+          duration: 8000,
+        });
+
+        // Add to audit log
+        const updatedIncident = addAuditLog(
+          selectedIncident,
+          'Hash Verification - FAILED',
+          'Evidence integrity compromised - hash mismatch detected (MOCK)'
+        );
+        updateIncident(updatedIncident);
+      }
+    }, 2000);
   };
 
   const getSeverityLabel = (value: number) => {
@@ -410,9 +523,21 @@ const OpsDashboard = () => {
                   disabled={selectedIncident.anchorStatus === 'anchored' || isAnchoring}
                 >
                   <Anchor className="w-4 h-4" />
-                  {selectedIncident.anchorStatus === 'anchored' ? 'Evidence Anchored' :
+                  {selectedIncident.anchorStatus === 'anchored' ? 'Evidence Anchored ✓' :
                    isAnchoring ? 'Anchoring...' : 'Anchor Evidence (Mock)'}
                 </Button>
+                
+                {selectedIncident.anchorStatus === 'anchored' && (
+                  <Button 
+                    variant="outline"
+                    size="sm" 
+                    className="w-full flex items-center gap-2"
+                    onClick={handleVerifyHash}
+                  >
+                    <Hash className="w-4 h-4" />
+                    Verify Hash Integrity
+                  </Button>
+                )}
                 
                 <div className="grid grid-cols-2 gap-2">
                   <Button 
