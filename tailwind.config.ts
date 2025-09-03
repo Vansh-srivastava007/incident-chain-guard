@@ -26,7 +26,8 @@ export default {
 				foreground: 'hsl(var(--foreground))',
 				primary: {
 					DEFAULT: 'hsl(var(--primary))',
-					foreground: 'hsl(var(--primary-foreground))'
+					foreground: 'hsl(var(--primary-foreground))',
+					hover: 'hsl(var(--primary-hover))'
 				},
 				secondary: {
 					DEFAULT: 'hsl(var(--secondary))',
@@ -51,6 +52,33 @@ export default {
 				card: {
 					DEFAULT: 'hsl(var(--card))',
 					foreground: 'hsl(var(--card-foreground))'
+				},
+				// Emergency response colors
+				urgent: {
+					DEFAULT: 'hsl(var(--urgent))',
+					foreground: 'hsl(var(--urgent-foreground))'
+				},
+				warning: {
+					DEFAULT: 'hsl(var(--warning))',
+					foreground: 'hsl(var(--warning-foreground))'
+				},
+				success: {
+					DEFAULT: 'hsl(var(--success))',
+					foreground: 'hsl(var(--success-foreground))'
+				},
+				// Severity levels
+				severity: {
+					low: 'hsl(var(--severity-low))',
+					medium: 'hsl(var(--severity-medium))',
+					high: 'hsl(var(--severity-high))',
+					critical: 'hsl(var(--severity-critical))'
+				},
+				// Status indicators
+				status: {
+					pending: 'hsl(var(--status-pending))',
+					anchoring: 'hsl(var(--status-anchoring))',
+					anchored: 'hsl(var(--status-anchored))',
+					mock: 'hsl(var(--status-mock))'
 				},
 				sidebar: {
 					DEFAULT: 'hsl(var(--sidebar-background))',
