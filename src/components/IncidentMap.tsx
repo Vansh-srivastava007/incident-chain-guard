@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import { StatusBadge } from '@/components/ui/badge-variant';
 import { Incident } from '@/types/incident';
@@ -25,17 +25,17 @@ interface IncidentMapProps {
   className?: string;
 }
 
-export function IncidentMap({ incidents, selectedIncidentId, onIncidentSelect, className }: IncidentMapProps) {
-  // Default to NYC if no incidents
-  const center: [number, number] = incidents.length > 0 
-    ? [incidents[0].location.lat, incidents[0].location.lng]
-    : [40.7128, -74.0060];
-
+// Separate component for map markers to avoid context issues
+function MapMarkers({ incidents, selectedIncidentId, onIncidentSelect }: {
+  incidents: Incident[];
+  selectedIncidentId?: string;
+  onIncidentSelect?: (incident: Incident) => void;
+}) {
   const getSeverityColor = (severity: number) => {
-    if (severity <= 3) return '#22c55e'; // green
-    if (severity <= 6) return '#eab308'; // yellow  
-    if (severity <= 8) return '#f97316'; // orange
-    return '#ef4444'; // red
+    if (severity <= 3) return '#22c55e';
+    if (severity <= 6) return '#eab308';
+    if (severity <= 8) return '#f97316';
+    return '#ef4444';
   };
 
   const getSeverityLabel = (value: number) => {
@@ -52,7 +52,6 @@ export function IncidentMap({ incidents, selectedIncidentId, onIncidentSelect, c
     return "critical";
   };
 
-  // Create custom markers based on severity
   const createSeverityIcon = (severity: number, isSelected: boolean) => {
     const color = getSeverityColor(severity);
     const size = isSelected ? 35 : 25;
@@ -83,6 +82,75 @@ export function IncidentMap({ incidents, selectedIncidentId, onIncidentSelect, c
   };
 
   return (
+    <>
+      {incidents.map((incident) => (
+        <Marker
+          key={incident.id}
+          position={[incident.location.lat, incident.location.lng]}
+          icon={createSeverityIcon(incident.severity, incident.id === selectedIncidentId)}
+          eventHandlers={{
+            click: () => onIncidentSelect?.(incident)
+          }}
+        >
+          <Popup>
+            <div className="p-2 min-w-[200px]">
+              <div className="flex items-center justify-between mb-2">
+                <h4 className="font-semibold capitalize">{incident.type}</h4>
+                <StatusBadge 
+                  status={getSeverityStatus(incident.severity)} 
+                  variant="severity"
+                >
+                  {getSeverityLabel(incident.severity)}
+                </StatusBadge>
+              </div>
+              
+              <p className="text-sm text-gray-600 mb-2">
+                {incident.reporterName ? `Reported by: ${incident.reporterName}` : 'Anonymous report'}
+              </p>
+              
+              <p className="text-sm mb-2">
+                {incident.notes ? incident.notes.slice(0, 100) + (incident.notes.length > 100 ? '...' : '') : 'No additional details'}
+              </p>
+              
+              <div className="text-xs text-gray-500">
+                {new Date(incident.reportedAt).toLocaleString()}
+              </div>
+              
+              <div className="flex gap-1 mt-2">
+                <StatusBadge status={incident.status} variant="status">
+                  {incident.status}
+                </StatusBadge>
+                <StatusBadge status={incident.anchorStatus} variant="anchor">
+                  {incident.anchorStatus === 'not_anchored' ? 'Not Anchored' : 
+                   incident.anchorStatus === 'anchoring' ? 'Anchoring...' : 'Anchored'}
+                </StatusBadge>
+              </div>
+            </div>
+          </Popup>
+        </Marker>
+      ))}
+    </>
+  );
+}
+
+export function IncidentMap({ incidents, selectedIncidentId, onIncidentSelect, className }: IncidentMapProps) {
+  const [mapReady, setMapReady] = useState(false);
+  
+  // Default to NYC if no incidents
+  const center: [number, number] = incidents.length > 0 
+    ? [incidents[0].location.lat, incidents[0].location.lng]
+    : [40.7128, -74.0060];
+
+  useEffect(() => {
+    // Ensure Leaflet is ready
+    setMapReady(true);
+  }, []);
+
+  if (!mapReady) {
+    return <div className={className}>Loading map...</div>;
+  }
+
+  return (
     <div className={className}>
       <MapContainer
         center={center}
@@ -94,53 +162,11 @@ export function IncidentMap({ incidents, selectedIncidentId, onIncidentSelect, c
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
-        
-        {incidents.map((incident) => (
-          <Marker
-            key={incident.id}
-            position={[incident.location.lat, incident.location.lng]}
-            icon={createSeverityIcon(incident.severity, incident.id === selectedIncidentId)}
-            eventHandlers={{
-              click: () => onIncidentSelect?.(incident)
-            }}
-          >
-            <Popup>
-              <div className="p-2 min-w-[200px]">
-                <div className="flex items-center justify-between mb-2">
-                  <h4 className="font-semibold capitalize">{incident.type}</h4>
-                  <StatusBadge 
-                    status={getSeverityStatus(incident.severity)} 
-                    variant="severity"
-                  >
-                    {getSeverityLabel(incident.severity)}
-                  </StatusBadge>
-                </div>
-                
-                <p className="text-sm text-gray-600 mb-2">
-                  {incident.reporterName ? `Reported by: ${incident.reporterName}` : 'Anonymous report'}
-                </p>
-                
-                <p className="text-sm mb-2">
-                  {incident.notes ? incident.notes.slice(0, 100) + (incident.notes.length > 100 ? '...' : '') : 'No additional details'}
-                </p>
-                
-                <div className="text-xs text-gray-500">
-                  {new Date(incident.reportedAt).toLocaleString()}
-                </div>
-                
-                <div className="flex gap-1 mt-2">
-                  <StatusBadge status={incident.status} variant="status">
-                    {incident.status}
-                  </StatusBadge>
-                  <StatusBadge status={incident.anchorStatus} variant="anchor">
-                    {incident.anchorStatus === 'not_anchored' ? 'Not Anchored' : 
-                     incident.anchorStatus === 'anchoring' ? 'Anchoring...' : 'Anchored'}
-                  </StatusBadge>
-                </div>
-              </div>
-            </Popup>
-          </Marker>
-        ))}
+        <MapMarkers
+          incidents={incidents}
+          selectedIncidentId={selectedIncidentId}
+          onIncidentSelect={onIncidentSelect}
+        />
       </MapContainer>
     </div>
   );
