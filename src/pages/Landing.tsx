@@ -2,7 +2,22 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Shield, MapPin, Anchor, Phone } from "lucide-react";
 import { Link } from "react-router-dom";
-import Spline from '@splinetool/react-spline';
+
+// Simple 3D-style hero element as fallback
+const Hero3D = () => (
+  <div className="relative h-[500px] w-full bg-gradient-to-br from-primary/20 via-primary/10 to-background rounded-2xl overflow-hidden">
+    <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,hsl(var(--primary))_0%,transparent_50%),radial-gradient(circle_at_70%_80%,hsl(var(--accent))_0%,transparent_50%)] opacity-30"></div>
+    <div className="absolute top-1/4 left-1/4 w-32 h-32 bg-primary/20 rounded-full blur-xl animate-pulse"></div>
+    <div className="absolute bottom-1/4 right-1/4 w-24 h-24 bg-accent/20 rounded-full blur-lg animate-pulse delay-1000"></div>
+    <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+      <div className="w-48 h-48 bg-gradient-to-br from-primary/30 to-accent/30 rounded-3xl backdrop-blur-sm border border-primary/20 animate-float">
+        <div className="absolute inset-4 bg-gradient-to-br from-background/50 to-transparent rounded-2xl flex items-center justify-center">
+          <Shield className="w-16 h-16 text-primary opacity-60" />
+        </div>
+      </div>
+    </div>
+  </div>
+);
 
 const Landing = () => {
   return (
@@ -43,12 +58,7 @@ const Landing = () => {
 
             {/* Right 3D Section */}
             <div className="hidden lg:block">
-              <div className="relative h-[500px] w-full">
-                <Spline
-                  scene="https://prod.spline.design/eSo9YFci-1sasxdL/scene.splinecode"
-                  className="w-full h-full"
-                />
-              </div>
+              <Hero3D />
             </div>
           </div>
         </div>
