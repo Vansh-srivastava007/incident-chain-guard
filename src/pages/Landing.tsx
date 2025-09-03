@@ -2,43 +2,59 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Shield, MapPin, Anchor, Phone } from "lucide-react";
 import { Link } from "react-router-dom";
+import Spline from '@splinetool/react-spline';
 
 const Landing = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-background to-muted">
       <main className="container mx-auto px-4 py-12 max-w-6xl">
         {/* Hero Section */}
-        <div className="text-center space-y-8 mb-16">
-          <div className="inline-flex items-center gap-2 bg-card border rounded-full px-6 py-2">
-            <Shield className="w-5 h-5 text-primary" />
-            <span className="text-sm font-medium text-card-foreground">
-              Blockchain Tourist Safety Protocol
-            </span>
-          </div>
-          
-          <h1 className="text-5xl font-bold text-foreground max-w-4xl mx-auto leading-tight">
-            Incident Response with
-            <span className="text-primary"> Immutable Evidence</span>
-          </h1>
-          
-          <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-            When tourists face emergencies, every second counts. Our system enables 
-            instant reporting, coordinated response, and blockchain-verified evidence 
-            integrity for accountability and justice.
-          </p>
+        <div className="relative">
+          <div className="grid lg:grid-cols-2 gap-12 items-center">
+            {/* Left Content */}
+            <div className="space-y-8">
+              <div className="inline-flex items-center gap-2 bg-card border rounded-full px-6 py-2">
+                <Shield className="w-5 h-5 text-primary" />
+                <span className="text-sm font-medium text-card-foreground">
+                  Blockchain Tourist Safety Protocol
+                </span>
+              </div>
+              
+              <h1 className="text-5xl font-bold text-foreground leading-tight">
+                Incident Response with
+                <span className="text-primary"> Immutable Evidence</span>
+              </h1>
+              
+              <p className="text-xl text-muted-foreground">
+                When tourists face emergencies, every second counts. Our system enables 
+                instant reporting, coordinated response, and blockchain-verified evidence 
+                integrity for accountability and justice.
+              </p>
 
-          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-            <Button asChild size="lg" className="text-lg px-8 py-6">
-              <Link to="/report">Start Demo - Report Incident</Link>
-            </Button>
-            <Button asChild variant="outline" size="lg" className="text-lg px-8 py-6">
-              <Link to="/dashboard">View Ops Dashboard</Link>
-            </Button>
+              <div className="flex flex-col sm:flex-row gap-4">
+                <Button asChild size="lg" className="text-lg px-8 py-6">
+                  <Link to="/report">Start Demo - Report Incident</Link>
+                </Button>
+                <Button asChild variant="outline" size="lg" className="text-lg px-8 py-6">
+                  <Link to="/dashboard">View Ops Dashboard</Link>
+                </Button>
+              </div>
+            </div>
+
+            {/* Right 3D Section */}
+            <div className="hidden lg:block">
+              <div className="relative h-[500px] w-full">
+                <Spline
+                  scene="https://prod.spline.design/eSo9YFci-1sasxdL/scene.splinecode"
+                  className="w-full h-full"
+                />
+              </div>
+            </div>
           </div>
         </div>
 
         {/* Problem Statement */}
-        <Card className="mb-12 border-l-4 border-l-urgent">
+        <Card className="mb-12 border-l-4 border-l-destructive mt-16">
           <CardContent className="p-8">
             <h2 className="text-2xl font-bold mb-4 text-foreground">The Challenge</h2>
             <p className="text-lg text-muted-foreground">
