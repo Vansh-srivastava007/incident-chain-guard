@@ -14,7 +14,178 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      audit_logs: {
+        Row: {
+          action: string
+          details: string | null
+          id: string
+          incident_id: string
+          timestamp: string
+          user_name: string
+        }
+        Insert: {
+          action: string
+          details?: string | null
+          id?: string
+          incident_id: string
+          timestamp?: string
+          user_name: string
+        }
+        Update: {
+          action?: string
+          details?: string | null
+          id?: string
+          incident_id?: string
+          timestamp?: string
+          user_name?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "audit_logs_incident_id_fkey"
+            columns: ["incident_id"]
+            isOneToOne: false
+            referencedRelation: "incidents"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      incident_files: {
+        Row: {
+          created_at: string
+          hash: string
+          id: string
+          incident_id: string
+          name: string
+          preview: string | null
+          size: number
+          storage_path: string | null
+          type: string
+        }
+        Insert: {
+          created_at?: string
+          hash: string
+          id?: string
+          incident_id: string
+          name: string
+          preview?: string | null
+          size: number
+          storage_path?: string | null
+          type: string
+        }
+        Update: {
+          created_at?: string
+          hash?: string
+          id?: string
+          incident_id?: string
+          name?: string
+          preview?: string | null
+          size?: number
+          storage_path?: string | null
+          type?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "incident_files_incident_id_fkey"
+            columns: ["incident_id"]
+            isOneToOne: false
+            referencedRelation: "incidents"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      incidents: {
+        Row: {
+          acknowledged_at: string | null
+          anchor_status: Database["public"]["Enums"]["anchor_status"]
+          chain_hash: string | null
+          chain_tx_id: string | null
+          created_at: string
+          created_by: string | null
+          id: string
+          location_address: string | null
+          location_lat: number
+          location_lng: number
+          notes: string
+          reported_at: string
+          reporter_name: string | null
+          resolved_at: string | null
+          severity: number
+          status: Database["public"]["Enums"]["incident_status"]
+          type: Database["public"]["Enums"]["incident_type"]
+          updated_at: string
+        }
+        Insert: {
+          acknowledged_at?: string | null
+          anchor_status?: Database["public"]["Enums"]["anchor_status"]
+          chain_hash?: string | null
+          chain_tx_id?: string | null
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          location_address?: string | null
+          location_lat: number
+          location_lng: number
+          notes: string
+          reported_at?: string
+          reporter_name?: string | null
+          resolved_at?: string | null
+          severity: number
+          status?: Database["public"]["Enums"]["incident_status"]
+          type: Database["public"]["Enums"]["incident_type"]
+          updated_at?: string
+        }
+        Update: {
+          acknowledged_at?: string | null
+          anchor_status?: Database["public"]["Enums"]["anchor_status"]
+          chain_hash?: string | null
+          chain_tx_id?: string | null
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          location_address?: string | null
+          location_lat?: number
+          location_lng?: number
+          notes?: string
+          reported_at?: string
+          reporter_name?: string | null
+          resolved_at?: string | null
+          severity?: number
+          status?: Database["public"]["Enums"]["incident_status"]
+          type?: Database["public"]["Enums"]["incident_type"]
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          created_at: string
+          display_name: string | null
+          email: string | null
+          id: string
+          role: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          display_name?: string | null
+          email?: string | null
+          id?: string
+          role?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          display_name?: string | null
+          email?: string | null
+          id?: string
+          role?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
@@ -23,7 +194,9 @@ export type Database = {
       [_ in never]: never
     }
     Enums: {
-      [_ in never]: never
+      anchor_status: "not_anchored" | "anchoring" | "anchored"
+      incident_status: "pending" | "acknowledged" | "resolved"
+      incident_type: "theft" | "assault" | "medical" | "crowd" | "other"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +323,10 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      anchor_status: ["not_anchored", "anchoring", "anchored"],
+      incident_status: ["pending", "acknowledged", "resolved"],
+      incident_type: ["theft", "assault", "medical", "crowd", "other"],
+    },
   },
 } as const
