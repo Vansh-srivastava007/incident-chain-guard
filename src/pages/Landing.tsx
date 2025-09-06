@@ -6,8 +6,7 @@ import { UserProfileButton } from "@/components/UserProfileButton";
 import { useAuth } from "@/hooks/useAuth";
 
 // Simple 3D-style hero element as fallback
-const Hero3D = () => (
-  <div className="relative h-[500px] w-full bg-gradient-to-br from-primary/20 via-primary/10 to-background rounded-2xl overflow-hidden">
+const Hero3D = () => <div className="relative h-[500px] w-full bg-gradient-to-br from-primary/20 via-primary/10 to-background rounded-2xl overflow-hidden">
     <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,hsl(var(--primary))_0%,transparent_50%),radial-gradient(circle_at_70%_80%,hsl(var(--accent))_0%,transparent_50%)] opacity-30"></div>
     <div className="absolute top-1/4 left-1/4 w-32 h-32 bg-primary/20 rounded-full blur-xl animate-pulse"></div>
     <div className="absolute bottom-1/4 right-1/4 w-24 h-24 bg-accent/20 rounded-full blur-lg animate-pulse delay-1000"></div>
@@ -18,23 +17,17 @@ const Hero3D = () => (
         </div>
       </div>
     </div>
-  </div>
-);
-
+  </div>;
 const Landing = () => {
-  const { user } = useAuth();
-
-  return (
-    <div className="min-h-screen bg-gradient-to-br from-background to-muted">
+  const {
+    user
+  } = useAuth();
+  return <div className="min-h-screen bg-gradient-to-br from-background to-muted">
       {/* Header with Profile Button */}
       <header className="absolute top-0 right-0 p-6 z-10">
-        {user ? (
-          <UserProfileButton />
-        ) : (
-          <Button asChild variant="outline">
+        {user ? <UserProfileButton /> : <Button asChild variant="outline">
             <Link to="/auth">Sign In</Link>
-          </Button>
-        )}
+          </Button>}
       </header>
 
       <main className="container mx-auto px-4 py-12 max-w-6xl">
@@ -66,7 +59,7 @@ const Landing = () => {
                   <Link to="/report">Start Demo - Report Incident</Link>
                 </Button>
                 <Button asChild variant="outline" size="lg" className="text-lg px-8 py-6">
-                  <Link to="/dashboard">View Ops Dashboard</Link>
+                  
                 </Button>
               </div>
             </div>
@@ -179,8 +172,6 @@ const Landing = () => {
           </p>
         </div>
       </main>
-    </div>
-  );
+    </div>;
 };
-
 export default Landing;
