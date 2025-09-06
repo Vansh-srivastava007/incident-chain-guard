@@ -24,6 +24,7 @@ import {
 } from "lucide-react";
 import { Link } from "react-router-dom";
 import { v4 as uuidv4 } from "uuid";
+import { UserProfileButton } from "@/components/UserProfileButton";
 
 const OpsDashboard = () => {
   const { toast } = useToast();
@@ -364,6 +365,7 @@ const OpsDashboard = () => {
             <Button asChild variant="outline">
               <Link to="/">Back to Landing</Link>
             </Button>
+            <UserProfileButton />
           </div>
         </div>
       </div>

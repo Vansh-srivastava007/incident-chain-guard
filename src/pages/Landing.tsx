@@ -2,6 +2,8 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Shield, MapPin, Anchor, Phone } from "lucide-react";
 import { Link } from "react-router-dom";
+import { UserProfileButton } from "@/components/UserProfileButton";
+import { useAuth } from "@/hooks/useAuth";
 
 // Simple 3D-style hero element as fallback
 const Hero3D = () => (
@@ -20,8 +22,21 @@ const Hero3D = () => (
 );
 
 const Landing = () => {
+  const { user } = useAuth();
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-background to-muted">
+      {/* Header with Profile Button */}
+      <header className="absolute top-0 right-0 p-6 z-10">
+        {user ? (
+          <UserProfileButton />
+        ) : (
+          <Button asChild variant="outline">
+            <Link to="/auth">Sign In</Link>
+          </Button>
+        )}
+      </header>
+
       <main className="container mx-auto px-4 py-12 max-w-6xl">
         {/* Hero Section */}
         <div className="relative">
