@@ -273,7 +273,7 @@ const ReportIncident = () => {
               disabled={isSubmitting}
               className="flex-1"
             >
-              {isSubmitting ? "Submitting..." : "Submit & Anchor (Mock)"}
+              {isSubmitting ? "Submitting..." : "Submit"}
             </Button>
           </div>
         </div>
