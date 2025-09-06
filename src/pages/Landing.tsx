@@ -59,7 +59,7 @@ const Landing = () => {
                   <Link to="/report">Start Demo - Report Incident</Link>
                 </Button>
                 <Button asChild variant="outline" size="lg" className="text-lg px-8 py-6">
-                  
+                  <Link to="/admin-login">Admin Panel</Link>
                 </Button>
               </div>
             </div>

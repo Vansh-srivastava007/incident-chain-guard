@@ -11,16 +11,19 @@ import { ArrowLeft, MapPin, Upload, Shield, Hash } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { v4 as uuidv4 } from "uuid";
 import { generateFileHash } from "@/utils/crypto";
-import { IncidentStore } from "@/utils/store";
-import { Incident, IncidentType, IncidentFile } from "@/types/incident";
+import { IncidentType, IncidentFile } from "@/types/incident";
 import { useToast } from "@/hooks/use-toast";
+import { useIncidents } from "@/hooks/useIncidents";
+import { useAuth } from "@/hooks/useAuth";
 
 const ReportIncident = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
+  const { createIncident } = useIncidents();
+  const { user } = useAuth();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showPreview, setShowPreview] = useState(false);
-  const [currentIncident, setCurrentIncident] = useState<Partial<Incident> | null>(null);
+  const [currentIncident, setCurrentIncident] = useState<any>(null);
   
   const [formData, setFormData] = useState({
     reporterName: "",
@@ -132,9 +135,7 @@ const ReportIncident = () => {
       return;
     }
 
-    const now = new Date().toISOString();
-    const incident: Incident = {
-      id: uuidv4(),
+    const incident = {
       reporterName: formData.reporterName || undefined,
       type: formData.type,
       severity: formData.severity[0],
@@ -145,40 +146,39 @@ const ReportIncident = () => {
       },
       notes: formData.notes,
       files: formData.files,
-      status: 'pending',
-      anchorStatus: 'not_anchored',
-      reportedAt: now,
-      auditLog: [
-        {
-          id: uuidv4(),
-          timestamp: now,
-          action: 'Incident Reported',
-          user: formData.reporterName || 'Anonymous Reporter'
-        }
-      ]
+      status: 'pending' as const,
+      anchorStatus: 'not_anchored' as const
     };
 
     setCurrentIncident(incident);
     setShowPreview(true);
   };
 
-  const finalizeSubmission = () => {
+  const finalizeSubmission = async () => {
     if (!currentIncident) return;
     
     setIsSubmitting(true);
     
-    // Simulate submission delay
-    setTimeout(() => {
-      const store = IncidentStore.getInstance();
-      store.saveIncident(currentIncident as Incident);
+    try {
+      await createIncident(currentIncident);
       
-      toast({
-        title: "Incident reported successfully",
-        description: `Incident ID: ${currentIncident.id.slice(0, 8)}...`,
+      // Generate a temporary ID for the confirmation page
+      const tempId = uuidv4();
+      
+      navigate('/report-confirmation', {
+        state: {
+          reportId: tempId,
+          reportType: currentIncident.type
+        }
       });
-      
-      navigate('/dashboard');
-    }, 1500);
+    } catch (error) {
+      toast({
+        title: "Submission failed",
+        description: "There was an error submitting your report. Please try again.",
+        variant: "destructive"
+      });
+      setIsSubmitting(false);
+    }
   };
 
   if (showPreview && currentIncident) {

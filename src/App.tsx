@@ -9,7 +9,10 @@ import Index from "./pages/Index";
 import Landing from "./pages/Landing";
 import Auth from "./pages/Auth";
 import ReportIncident from "./pages/ReportIncident";
+import ReportConfirmation from "./pages/ReportConfirmation";
 import OpsDashboard from "./pages/OpsDashboard";
+import AdminLogin from "./pages/AdminLogin";
+import AdminPanel from "./pages/AdminPanel";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -25,6 +28,9 @@ const App = () => (
             <Route path="/" element={<Landing />} />
             <Route path="/auth" element={<Auth />} />
             <Route path="/report" element={<ReportIncident />} />
+            <Route path="/report-confirmation" element={<ReportConfirmation />} />
+            <Route path="/admin-login" element={<AdminLogin />} />
+            <Route path="/admin-panel" element={<AdminPanel />} />
             <Route path="/dashboard" element={
               <ProtectedRoute>
                 <OpsDashboard />
