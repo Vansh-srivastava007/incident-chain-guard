@@ -1,14 +1,7 @@
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { 
-  DropdownMenu, 
-  DropdownMenuContent, 
-  DropdownMenuItem, 
-  DropdownMenuLabel, 
-  DropdownMenuSeparator, 
-  DropdownMenuTrigger 
-} from '@/components/ui/dropdown-menu';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -16,41 +9,39 @@ import { useAuth } from '@/hooks/useAuth';
 import { useIncidents } from '@/hooks/useIncidents';
 import { User, LogOut, FileText, Clock, MapPin } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
-
 export const UserProfileButton = () => {
-  const { user, signOut } = useAuth();
-  const { incidents } = useIncidents();
-  const { toast } = useToast();
+  const {
+    user,
+    signOut
+  } = useAuth();
+  const {
+    incidents
+  } = useIncidents();
+  const {
+    toast
+  } = useToast();
   const [showProfile, setShowProfile] = useState(false);
-
   if (!user) return null;
-
   const handleSignOut = async () => {
     try {
       await signOut();
       toast({
         title: "Signed out successfully",
-        description: "You have been logged out of the system.",
+        description: "You have been logged out of the system."
       });
     } catch (error) {
       toast({
         title: "Sign out failed",
         description: "There was an error signing you out. Please try again.",
-        variant: "destructive",
+        variant: "destructive"
       });
     }
   };
-
   const userInitials = user.email?.slice(0, 2).toUpperCase() || 'U';
   const userIncidents = incidents || [];
-
-  return (
-    <DropdownMenu>
+  return <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button 
-          variant="ghost" 
-          className="relative h-12 w-12 rounded-full border-2 border-primary/20 hover:border-primary/40 transition-colors"
-        >
+        <Button variant="ghost" className="relative h-12 w-12 rounded-full border-2 border-primary/20 hover:border-primary/40 transition-colors">
           <Avatar className="h-10 w-10">
             <AvatarImage src={user.user_metadata?.avatar_url} />
             <AvatarFallback className="bg-primary text-primary-foreground font-semibold">
@@ -76,7 +67,7 @@ export const UserProfileButton = () => {
         
         <Dialog open={showProfile} onOpenChange={setShowProfile}>
           <DialogTrigger asChild>
-            <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
+            <DropdownMenuItem onSelect={e => e.preventDefault()}>
               <User className="mr-2 h-4 w-4" />
               <span>Profile & Records</span>
             </DropdownMenuItem>
@@ -125,7 +116,8 @@ export const UserProfileButton = () => {
                     </div>
                     <div>
                       <span className="font-medium text-muted-foreground">Role:</span>
-                      <Badge variant="secondary">Operator</Badge>
+                      <Badge variant="secondary" className="bg-gray-300">Tourist
+                    </Badge>
                     </div>
                   </div>
                 </CardContent>
@@ -140,20 +132,13 @@ export const UserProfileButton = () => {
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  {userIncidents.length === 0 ? (
-                    <p className="text-muted-foreground text-center py-8">
+                  {userIncidents.length === 0 ? <p className="text-muted-foreground text-center py-8">
                       No incident records found. Records will appear here as you interact with the system.
-                    </p>
-                  ) : (
-                    <div className="space-y-3 max-h-60 overflow-y-auto">
-                      {userIncidents.slice(0, 10).map((incident) => (
-                        <div key={incident.id} className="border rounded-lg p-3 space-y-2">
+                    </p> : <div className="space-y-3 max-h-60 overflow-y-auto">
+                      {userIncidents.slice(0, 10).map(incident => <div key={incident.id} className="border rounded-lg p-3 space-y-2">
                           <div className="flex items-center justify-between">
                             <h4 className="font-medium capitalize text-sm">{incident.type}</h4>
-                            <Badge 
-                              variant={incident.severity <= 3 ? "secondary" : 
-                                      incident.severity <= 6 ? "default" : "destructive"}
-                            >
+                            <Badge variant={incident.severity <= 3 ? "secondary" : incident.severity <= 6 ? "default" : "destructive"}>
                               Severity {incident.severity}
                             </Badge>
                           </div>
@@ -174,20 +159,15 @@ export const UserProfileButton = () => {
                               {incident.status}
                             </Badge>
                             <Badge variant="outline" className="text-xs">
-                              {incident.anchorStatus === 'not_anchored' ? 'Not Anchored' : 
-                               incident.anchorStatus === 'anchoring' ? 'Anchoring...' : 'Anchored'}
+                              {incident.anchorStatus === 'not_anchored' ? 'Not Anchored' : incident.anchorStatus === 'anchoring' ? 'Anchoring...' : 'Anchored'}
                             </Badge>
                           </div>
                           
-                          {incident.notes && (
-                            <p className="text-xs text-muted-foreground line-clamp-2">
+                          {incident.notes && <p className="text-xs text-muted-foreground line-clamp-2">
                               {incident.notes}
-                            </p>
-                          )}
-                        </div>
-                      ))}
-                    </div>
-                  )}
+                            </p>}
+                        </div>)}
+                    </div>}
                 </CardContent>
               </Card>
             </div>
@@ -201,6 +181,5 @@ export const UserProfileButton = () => {
           <span>Sign Out</span>
         </DropdownMenuItem>
       </DropdownMenuContent>
-    </DropdownMenu>
-  );
+    </DropdownMenu>;
 };
