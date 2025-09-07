@@ -170,7 +170,7 @@ const Landing = () => {
         {/* Demo Instructions */}
         <Card className="bg-primary/5 border-primary/20">
           <CardContent className="p-8">
-            <h2 className="text-2xl font-bold mb-6 text-foreground">45-Second Demo Flow</h2>
+            <h2 className="text-2xl font-bold mb-6 text-foreground">90-Second Demo Flow</h2>
             <div className="space-y-4">
               <div className="flex items-start gap-4">
                 <div className="w-8 h-8 bg-primary text-primary-foreground rounded-full flex items-center justify-center font-bold text-sm flex-shrink-0">1</div>
