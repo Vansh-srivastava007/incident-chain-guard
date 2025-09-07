@@ -113,6 +113,8 @@ export type Database = {
           status: Database["public"]["Enums"]["incident_status"]
           type: Database["public"]["Enums"]["incident_type"]
           updated_at: string
+          verification_at: string | null
+          verification_status: string | null
         }
         Insert: {
           acknowledged_at?: string | null
@@ -133,6 +135,8 @@ export type Database = {
           status?: Database["public"]["Enums"]["incident_status"]
           type: Database["public"]["Enums"]["incident_type"]
           updated_at?: string
+          verification_at?: string | null
+          verification_status?: string | null
         }
         Update: {
           acknowledged_at?: string | null
@@ -153,6 +157,8 @@ export type Database = {
           status?: Database["public"]["Enums"]["incident_status"]
           type?: Database["public"]["Enums"]["incident_type"]
           updated_at?: string
+          verification_at?: string | null
+          verification_status?: string | null
         }
         Relationships: []
       }

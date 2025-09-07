@@ -4,6 +4,8 @@ export type IncidentStatus = 'pending' | 'acknowledged' | 'resolved';
 
 export type AnchorStatus = 'not_anchored' | 'anchoring' | 'anchored';
 
+export type VerificationStatus = 'pending' | 'verified' | 'compromised';
+
 export interface IncidentLocation {
   lat: number;
   lng: number;
@@ -37,11 +39,13 @@ export interface Incident {
   files: IncidentFile[];
   status: IncidentStatus;
   anchorStatus: AnchorStatus;
+  verificationStatus: VerificationStatus;
   chainTxId?: string;
   chainHash?: string;
   reportedAt: string;
   acknowledgedAt?: string;
   resolvedAt?: string;
+  verificationAt?: string;
   auditLog: AuditLogEntry[];
 }
 

@@ -147,7 +147,8 @@ const ReportIncident = () => {
       notes: formData.notes,
       files: formData.files,
       status: 'pending' as const,
-      anchorStatus: 'not_anchored' as const
+      anchorStatus: 'not_anchored' as const,
+      verificationStatus: 'pending' as const
     };
 
     setCurrentIncident(incident);

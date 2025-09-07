@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { Phone, Shield, Heart, Flame, AlertTriangle, Users, ArrowLeft } from 'lucide-react';
+import { Phone, Shield, Heart, Flame, AlertTriangle, Users, ArrowLeft, Anchor, CheckCircle2, AlertCircle } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useIncidents } from '@/hooks/useIncidents';
 import { useToast } from '@/hooks/use-toast';
@@ -69,9 +69,10 @@ const emergencyContacts: EmergencyContact[] = [
 ];
 
 const AdminPanel = () => {
-  const { incidents, loading } = useIncidents();
+  const { incidents, loading, anchorEvidence, verifyHashIntegrity } = useIncidents();
   const { toast } = useToast();
   const [lastUpdate, setLastUpdate] = useState(new Date());
+  const [processingIncident, setProcessingIncident] = useState<string | null>(null);
 
   useEffect(() => {
     // Auto-refresh every 30 seconds for real-time updates
@@ -107,6 +108,42 @@ const AdminPanel = () => {
     if (severity <= 6) return 'default';
     if (severity <= 8) return 'destructive';
     return 'destructive';
+  };
+
+  const getAnchorStatusColor = (status: string) => {
+    switch (status) {
+      case 'not_anchored': return 'secondary';
+      case 'anchoring': return 'default';
+      case 'anchored': return 'default';
+      default: return 'secondary';
+    }
+  };
+
+  const getVerificationStatusColor = (status: string) => {
+    switch (status) {
+      case 'pending': return 'secondary';
+      case 'verified': return 'default';
+      case 'compromised': return 'destructive';
+      default: return 'secondary';
+    }
+  };
+
+  const handleAnchorEvidence = async (incident: any) => {
+    setProcessingIncident(incident.id);
+    try {
+      await anchorEvidence(incident);
+    } finally {
+      setProcessingIncident(null);
+    }
+  };
+
+  const handleVerifyHash = async (incident: any) => {
+    setProcessingIncident(incident.id);
+    try {
+      await verifyHashIntegrity(incident);
+    } finally {
+      setProcessingIncident(null);
+    }
   };
 
   return (
@@ -156,9 +193,12 @@ const AdminPanel = () => {
                       <TableHead>Type</TableHead>
                       <TableHead>Severity</TableHead>
                       <TableHead>Status</TableHead>
+                      <TableHead>Anchor Status</TableHead>
+                      <TableHead>Verification</TableHead>
                       <TableHead>Date/Time</TableHead>
                       <TableHead>Location</TableHead>
                       <TableHead>Details</TableHead>
+                      <TableHead>Actions</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
@@ -185,6 +225,26 @@ const AdminPanel = () => {
                             {incident.status}
                           </Badge>
                         </TableCell>
+                        <TableCell>
+                          <Badge variant={getAnchorStatusColor(incident.anchorStatus)}>
+                            {incident.anchorStatus}
+                          </Badge>
+                          {incident.chainTxId && (
+                            <div className="text-xs text-muted-foreground mt-1 font-mono">
+                              TX: {incident.chainTxId.slice(0, 10)}...
+                            </div>
+                          )}
+                        </TableCell>
+                        <TableCell>
+                          <Badge variant={getVerificationStatusColor(incident.verificationStatus)}>
+                            {incident.verificationStatus}
+                          </Badge>
+                          {incident.verificationAt && (
+                            <div className="text-xs text-muted-foreground mt-1">
+                              {new Date(incident.verificationAt).toLocaleString()}
+                            </div>
+                          )}
+                        </TableCell>
                         <TableCell className="text-sm">
                           {new Date(incident.reportedAt).toLocaleString()}
                         </TableCell>
@@ -194,6 +254,45 @@ const AdminPanel = () => {
                         <TableCell className="max-w-xs">
                           <div className="truncate text-sm" title={incident.notes}>
                             {incident.notes || 'No details provided'}
+                          </div>
+                        </TableCell>
+                        <TableCell>
+                          <div className="flex flex-col gap-2 min-w-[200px]">
+                            {incident.anchorStatus === 'not_anchored' && (
+                              <Button
+                                size="sm"
+                                variant="outline"
+                                onClick={() => handleAnchorEvidence(incident)}
+                                disabled={processingIncident === incident.id}
+                                className="text-xs"
+                              >
+                                <Anchor className="w-3 h-3 mr-1" />
+                                {processingIncident === incident.id ? 'Anchoring...' : 'Anchor Evidence (Mock)'}
+                              </Button>
+                            )}
+                            {incident.anchorStatus === 'anchored' && incident.chainHash && (
+                              <Button
+                                size="sm"
+                                variant="outline"
+                                onClick={() => handleVerifyHash(incident)}
+                                disabled={processingIncident === incident.id}
+                                className="text-xs"
+                              >
+                                <CheckCircle2 className="w-3 h-3 mr-1" />
+                                {processingIncident === incident.id ? 'Verifying...' : 'Verify Hash'}
+                              </Button>
+                            )}
+                            {incident.status === 'pending' && (
+                              <Button
+                                size="sm"
+                                variant="default"
+                                onClick={() => handleCall('100', 'Police')}
+                                className="text-xs"
+                              >
+                                <Phone className="w-3 h-3 mr-1" />
+                                Call Police (Mock)
+                              </Button>
+                            )}
                           </div>
                         </TableCell>
                       </TableRow>

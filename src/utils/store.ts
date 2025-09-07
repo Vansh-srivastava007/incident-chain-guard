@@ -52,10 +52,12 @@ export class IncidentStore {
         files: [],
         status: 'acknowledged',
         anchorStatus: 'anchored',
+        verificationStatus: 'verified',
         chainTxId: '0xdeadbeef123456789abcdef',
         chainHash: 'a1b2c3d4e5f6...',
         reportedAt: new Date(now.getTime() - 2 * 60 * 60 * 1000).toISOString(),
         acknowledgedAt: new Date(now.getTime() - 1 * 60 * 60 * 1000).toISOString(),
+        verificationAt: new Date(now.getTime() - 30 * 60 * 1000).toISOString(),
         auditLog: [
           {
             id: 'audit-001',
@@ -81,6 +83,7 @@ export class IncidentStore {
         files: [],
         status: 'pending',
         anchorStatus: 'not_anchored',
+        verificationStatus: 'pending',
         reportedAt: new Date(now.getTime() - 30 * 60 * 1000).toISOString(),
         auditLog: [
           {
