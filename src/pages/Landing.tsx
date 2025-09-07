@@ -73,8 +73,15 @@ const Landing = () => {
             </div>
 
             {/* Right 3D Section */}
-            <div className="hidden lg:block">
+            <div className="hidden lg:block relative">
               <Hero3D />
+              {/* Overlay to cover Spline branding */}
+              <div className="absolute bottom-4 right-4 bg-background/90 backdrop-blur-sm border border-border rounded-lg px-4 py-2 shadow-lg">
+                <div className="flex items-center gap-2">
+                  <Shield className="w-4 h-4 text-primary" />
+                  <span className="text-sm font-medium text-foreground">Powered by AI Security</span>
+                </div>
+              </div>
             </div>
           </div>
         </div>
