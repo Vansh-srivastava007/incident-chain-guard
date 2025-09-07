@@ -1,9 +1,11 @@
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Shield, MapPin, Anchor, Phone } from "lucide-react";
 import { Link } from "react-router-dom";
 import { UserProfileButton } from "@/components/UserProfileButton";
 import { useAuth } from "@/hooks/useAuth";
+import { PermissionModal } from "@/components/PermissionModal";
 
 // Simple 3D-style hero element as fallback
 const Hero3D = () => <div className="relative h-[500px] w-full bg-gradient-to-br from-primary/20 via-primary/10 to-background rounded-2xl overflow-hidden">
@@ -19,9 +21,21 @@ const Hero3D = () => <div className="relative h-[500px] w-full bg-gradient-to-br
     </div>
   </div>;
 const Landing = () => {
-  const {
-    user
-  } = useAuth();
+  const { user } = useAuth();
+  const [showPermissionModal, setShowPermissionModal] = useState(false);
+
+  useEffect(() => {
+    // Show the permission modal when the page loads for the first time
+    const hasSeenPermissions = localStorage.getItem('hasSeenPermissions');
+    if (!hasSeenPermissions) {
+      setTimeout(() => setShowPermissionModal(true), 1000); // Show after 1 second
+    }
+  }, []);
+
+  const handlePermissionClose = () => {
+    setShowPermissionModal(false);
+    localStorage.setItem('hasSeenPermissions', 'true');
+  };
   return <div className="min-h-screen bg-gradient-to-br from-background to-muted">
       {/* Header with Profile Button */}
       <header className="absolute top-0 right-0 p-6 z-10">
@@ -172,6 +186,12 @@ const Landing = () => {
           </p>
         </div>
       </main>
+
+      {/* Permission Modal */}
+      <PermissionModal 
+        isOpen={showPermissionModal} 
+        onClose={handlePermissionClose} 
+      />
     </div>;
 };
 export default Landing;

@@ -10,7 +10,6 @@ import Landing from "./pages/Landing";
 import Auth from "./pages/Auth";
 import ReportIncident from "./pages/ReportIncident";
 import ReportConfirmation from "./pages/ReportConfirmation";
-import OpsDashboard from "./pages/OpsDashboard";
 import AdminLogin from "./pages/AdminLogin";
 import AdminPanel from "./pages/AdminPanel";
 import NotFound from "./pages/NotFound";
@@ -31,11 +30,6 @@ const App = () => (
             <Route path="/report-confirmation" element={<ReportConfirmation />} />
             <Route path="/admin-login" element={<AdminLogin />} />
             <Route path="/admin-panel" element={<AdminPanel />} />
-            <Route path="/dashboard" element={
-              <ProtectedRoute>
-                <OpsDashboard />
-              </ProtectedRoute>
-            } />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
