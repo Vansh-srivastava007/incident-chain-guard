@@ -79,13 +79,6 @@ const ReportConfirmation = () => {
 
             <div className="flex flex-col gap-3">
               <Button asChild className="w-full">
-                <Link to="/dashboard">
-                  <FileText className="w-4 h-4 mr-2" />
-                  View Dashboard
-                </Link>
-              </Button>
-              
-              <Button asChild variant="outline" className="w-full">
                 <Link to="/">
                   <Home className="w-4 h-4 mr-2" />
                   Back to Home

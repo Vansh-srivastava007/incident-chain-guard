@@ -95,8 +95,12 @@ const Landing = () => {
               </p>
 
               <div className="flex flex-col sm:flex-row gap-4">
-                <Button asChild size="lg" className="text-lg px-8 py-6">
-                  <Link to="/report">Start Demo - Report Incident</Link>
+                <Button 
+                  size="lg" 
+                  className="text-lg px-8 py-6"
+                  onClick={() => setShowPermissionModal(true)}
+                >
+                  Start Demo - Report Incident
                 </Button>
                 <Button asChild variant="outline" size="lg" className="text-lg px-8 py-6">
                   <Link to="/admin-login">Admin Panel</Link>
@@ -211,19 +215,67 @@ const Landing = () => {
           </CardContent>
         </Card>
 
-        {/* Footer */}
-        <div className="text-center mt-16 text-muted-foreground">
-          <p className="text-sm">
-            🚨 This is a PROTOTYPE using CLIENT-SIDE MOCKS for demo purposes. 
-            Production deployment requires integration with Twilio (PSTN), MinIO (storage), and Polygon (blockchain).
-          </p>
-        </div>
+        {/* Enhanced Footer */}
+        <footer className="mt-16 border-t border-border/40 pt-12 pb-8">
+          <div className="grid md:grid-cols-4 gap-8 mb-8">
+            <div className="space-y-3">
+              <div className="flex items-center gap-2">
+                <Shield className="w-5 h-5 text-primary" />
+                <span className="font-bold text-lg">IncidentChain</span>
+              </div>
+              <p className="text-sm text-muted-foreground">
+                Blockchain-powered tourist safety and emergency response system.
+              </p>
+            </div>
+            
+            <div className="space-y-3">
+              <h4 className="font-semibold">Features</h4>
+              <ul className="space-y-2 text-sm text-muted-foreground">
+                <li>Instant Incident Reporting</li>
+                <li>Blockchain Evidence Anchoring</li>
+                <li>Emergency Response Coordination</li>
+                <li>Hash Integrity Verification</li>
+              </ul>
+            </div>
+            
+            <div className="space-y-3">
+              <h4 className="font-semibold">Safety</h4>
+              <ul className="space-y-2 text-sm text-muted-foreground">
+                <li>24/7 Emergency Support</li>
+                <li>Real-time Location Tracking</li>
+                <li>Automated Alert System</li>
+                <li>Multi-language Support</li>
+              </ul>
+            </div>
+            
+            <div className="space-y-3">
+              <h4 className="font-semibold">Legal</h4>
+              <ul className="space-y-2 text-sm text-muted-foreground">
+                <li>Privacy Policy</li>
+                <li>Terms of Service</li>
+                <li>Emergency Procedures</li>
+                <li>Contact Information</li>
+              </ul>
+            </div>
+          </div>
+          
+          <div className="text-center border-t border-border/40 pt-6 space-y-4">
+            <p className="text-sm text-muted-foreground">
+              🚨 This is a PROTOTYPE using CLIENT-SIDE MOCKS for demo purposes. 
+              Production deployment requires integration with Twilio (PSTN), MinIO (storage), and Polygon (blockchain).
+            </p>
+            <p className="text-xs text-muted-foreground">
+              © 2024 IncidentChain Guard. All rights reserved. Emergency: 112 (India) | 911 (USA) | 999 (UK)
+            </p>
+          </div>
+        </footer>
       </main>
 
       {/* Permission Modal */}
       <PermissionModal 
         isOpen={showPermissionModal} 
-        onClose={handlePermissionClose} 
+        onClose={handlePermissionClose}
+        navigateAfterAllow="/report"
       />
     </div>;
 };

@@ -3,10 +3,14 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Phone, Shield, Heart, Flame, AlertTriangle, Users, ArrowLeft, Anchor, CheckCircle2, AlertCircle } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useIncidents } from '@/hooks/useIncidents';
 import { useToast } from '@/hooks/use-toast';
+import { IncidentMap } from "@/components/IncidentMap";
+import GeofenceMap from "@/components/GeofenceMap";
+import { Incident } from '@/types/incident';
 
 interface EmergencyContact {
   category: string;
@@ -73,6 +77,8 @@ const AdminPanel = () => {
   const { toast } = useToast();
   const [lastUpdate, setLastUpdate] = useState(new Date());
   const [processingIncident, setProcessingIncident] = useState<string | null>(null);
+  const [activeTab, setActiveTab] = useState("overview");
+  const [selectedIncident, setSelectedIncident] = useState<Incident | null>(null);
 
   useEffect(() => {
     // Auto-refresh every 30 seconds for real-time updates
@@ -165,6 +171,70 @@ const AdminPanel = () => {
             <p>Auto-refresh: Every 30s</p>
           </div>
         </div>
+
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
+          <TabsList className="grid w-full grid-cols-4">
+            <TabsTrigger value="overview">Overview</TabsTrigger>
+            <TabsTrigger value="incidents">Incidents</TabsTrigger>
+            <TabsTrigger value="analytics">Analytics</TabsTrigger>
+            <TabsTrigger value="geofencing">Geofencing</TabsTrigger>
+          </TabsList>
+
+          <TabsContent value="overview" className="space-y-6">
+            {/* System Statistics */}
+            <div className="grid md:grid-cols-4 gap-4">
+              <Card>
+                <CardContent className="p-4 text-center">
+                  <p className="text-2xl font-bold text-primary">{incidents.length}</p>
+                  <p className="text-sm text-muted-foreground">Total Reports</p>
+                </CardContent>
+              </Card>
+              <Card>
+                <CardContent className="p-4 text-center">
+                  <p className="text-2xl font-bold text-yellow-600">
+                    {incidents.filter(i => i.status === 'pending').length}
+                  </p>
+                  <p className="text-sm text-muted-foreground">Pending</p>
+                </CardContent>
+              </Card>
+              <Card>
+                <CardContent className="p-4 text-center">
+                  <p className="text-2xl font-bold text-blue-600">
+                    {incidents.filter(i => i.status === 'acknowledged').length}
+                  </p>
+                  <p className="text-sm text-muted-foreground">In Progress</p>
+                </CardContent>
+              </Card>
+              <Card>
+                <CardContent className="p-4 text-center">
+                  <p className="text-2xl font-bold text-green-600">
+                    {incidents.filter(i => i.status === 'resolved').length}
+                  </p>
+                  <p className="text-sm text-muted-foreground">Resolved</p>
+                </CardContent>
+              </Card>
+            </div>
+
+            {/* Incident Map Overview */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Shield className="w-5 h-5" />
+                  Incident Locations
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <IncidentMap
+                  incidents={incidents}
+                  selectedIncidentId={selectedIncident?.id}
+                  onIncidentSelect={(incident: Incident) => setSelectedIncident(incident)}
+                  className="h-[400px]"
+                />
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          <TabsContent value="incidents" className="space-y-6">
 
         {/* Reports Table */}
         <Card>
@@ -303,79 +373,67 @@ const AdminPanel = () => {
             )}
           </CardContent>
         </Card>
+          </TabsContent>
 
-        {/* Helpline Options */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Phone className="w-5 h-5" />
-              Emergency Helpline Numbers (India)
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {emergencyContacts.map((contact, index) => (
-                <Card key={index} className="hover:shadow-md transition-shadow">
-                  <CardContent className="p-4">
-                    <div className="flex items-start gap-3">
-                      <div className="w-10 h-10 bg-primary/10 rounded-full flex items-center justify-center flex-shrink-0">
-                        <contact.icon className="w-5 h-5 text-primary" />
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <h3 className="font-semibold text-sm">{contact.name}</h3>
-                        <p className="text-xs text-muted-foreground mb-2">
-                          {contact.description}
-                        </p>
-                        <Button 
-                          onClick={() => handleCall(contact.number, contact.name)}
-                          size="sm" 
-                          className="w-full"
-                        >
-                          <Phone className="w-3 h-3 mr-2" />
-                          Call {contact.number}
-                        </Button>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-              ))}
+          <TabsContent value="analytics" className="space-y-6">
+            {/* Helpline Options */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Phone className="w-5 h-5" />
+                  Emergency Helpline Numbers (India)
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+                  {emergencyContacts.map((contact, index) => (
+                    <Card key={index} className="hover:shadow-md transition-shadow">
+                      <CardContent className="p-4">
+                        <div className="flex items-start gap-3">
+                          <div className="w-10 h-10 bg-primary/10 rounded-full flex items-center justify-center flex-shrink-0">
+                            <contact.icon className="w-5 h-5 text-primary" />
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <h3 className="font-semibold text-sm">{contact.name}</h3>
+                            <p className="text-xs text-muted-foreground mb-2">
+                              {contact.description}
+                            </p>
+                            <Button 
+                              onClick={() => handleCall(contact.number, contact.name)}
+                              size="sm" 
+                              className="w-full"
+                            >
+                              <Phone className="w-3 h-3 mr-2" />
+                              Call {contact.number}
+                            </Button>
+                          </div>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          <TabsContent value="geofencing" className="space-y-6">
+            <div className="flex justify-between items-center">
+              <div>
+                <h2 className="text-2xl font-bold tracking-tight">Geofencing & Safety Zones</h2>
+                <p className="text-muted-foreground">
+                  Monitor safety zones and geofenced areas with real-time incident tracking
+                </p>
+              </div>
             </div>
-          </CardContent>
-        </Card>
 
-        {/* System Statistics */}
-        <div className="grid md:grid-cols-4 gap-4">
-          <Card>
-            <CardContent className="p-4 text-center">
-              <p className="text-2xl font-bold text-primary">{incidents.length}</p>
-              <p className="text-sm text-muted-foreground">Total Reports</p>
-            </CardContent>
-          </Card>
-          <Card>
-            <CardContent className="p-4 text-center">
-              <p className="text-2xl font-bold text-yellow-600">
-                {incidents.filter(i => i.status === 'pending').length}
-              </p>
-              <p className="text-sm text-muted-foreground">Pending</p>
-            </CardContent>
-          </Card>
-          <Card>
-            <CardContent className="p-4 text-center">
-              <p className="text-2xl font-bold text-blue-600">
-                {incidents.filter(i => i.status === 'acknowledged').length}
-              </p>
-              <p className="text-sm text-muted-foreground">In Progress</p>
-            </CardContent>
-          </Card>
-          <Card>
-            <CardContent className="p-4 text-center">
-              <p className="text-2xl font-bold text-green-600">
-                {incidents.filter(i => i.status === 'resolved').length}
-              </p>
-              <p className="text-sm text-muted-foreground">Resolved</p>
-            </CardContent>
-          </Card>
-        </div>
+            <GeofenceMap 
+              incidents={incidents}
+              selectedIncidentId={selectedIncident?.id}
+              onIncidentSelect={(id: string) => setSelectedIncident(incidents.find(i => i.id === id) || null)}
+              userRole="admin"
+            />
+          </TabsContent>
+        </Tabs>
       </div>
     </div>
   );

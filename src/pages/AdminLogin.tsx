@@ -18,7 +18,7 @@ const AdminLogin = () => {
   });
 
   // Hardcoded admin credentials
-  const ADMIN_EMAIL = 'vanshsrivastava252@gmil.com';
+  const ADMIN_EMAIL = 'vanshsrivastava252@gmail.com';
   const ADMIN_PASSWORD = 'userreport';
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -121,7 +121,7 @@ const AdminLogin = () => {
           <CardContent className="p-4">
             <h3 className="font-semibold text-sm mb-2">Demo Credentials:</h3>
             <div className="space-y-1 text-sm">
-              <p><strong>Email:</strong> vanshsrivastava252@gmil.com</p>
+              <p><strong>Email:</strong> vanshsrivastava252@gmail.com</p>
               <p><strong>Password:</strong> userreport</p>
             </div>
             <p className="text-xs text-muted-foreground mt-2">

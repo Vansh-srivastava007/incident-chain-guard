@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Switch } from "@/components/ui/switch";
+import { useNavigate } from "react-router-dom";
 import { 
   MapPin, 
   Cookie, 
@@ -26,9 +27,11 @@ interface Permission {
 interface PermissionModalProps {
   isOpen: boolean;
   onClose: () => void;
+  navigateAfterAllow?: string;
 }
 
-export const PermissionModal = ({ isOpen, onClose }: PermissionModalProps) => {
+export const PermissionModal = ({ isOpen, onClose, navigateAfterAllow }: PermissionModalProps) => {
+  const navigate = useNavigate();
   const [showCustomize, setShowCustomize] = useState(false);
   const [permissions, setPermissions] = useState<Permission[]>([
     {
@@ -137,6 +140,9 @@ export const PermissionModal = ({ isOpen, onClose }: PermissionModalProps) => {
       }
     }
     
+    if (navigateAfterAllow) {
+      navigate(navigateAfterAllow);
+    }
     onClose();
   };
 
