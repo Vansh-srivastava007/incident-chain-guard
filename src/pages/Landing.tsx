@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, lazy, Suspense } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Shield, MapPin, Anchor, Phone } from "lucide-react";
@@ -6,7 +6,7 @@ import { Link } from "react-router-dom";
 import { UserProfileButton } from "@/components/UserProfileButton";
 import { useAuth } from "@/hooks/useAuth";
 import { PermissionModal } from "@/components/PermissionModal";
-import { GeofenceMap } from "@/components/GeofenceMap";
+
 import Spline from '@splinetool/react-spline';
 
 // Fallback 3D-style hero element
@@ -47,6 +47,7 @@ const Hero3D = () => {
     </div>
   );
 };
+const GeofenceMapLazy = lazy(() => import("@/components/GeofenceMap").then(m => ({ default: m.GeofenceMap })));
 const Landing = () => {
   const { user } = useAuth();
   const [showPermissionModal, setShowPermissionModal] = useState(false);
@@ -182,24 +183,26 @@ const Landing = () => {
                 </p>
                 <div className="space-y-4">
                   <div className="flex items-center gap-3">
-                    <div className="w-4 h-4 bg-green-500 rounded-full"></div>
+                    <div className="w-4 h-4 bg-primary rounded-full"></div>
                     <span className="text-foreground font-medium">Safe Zones</span>
                     <span className="text-muted-foreground">- Low risk areas with active monitoring</span>
                   </div>
                   <div className="flex items-center gap-3">
-                    <div className="w-4 h-4 bg-orange-500 rounded-full"></div>
+                    <div className="w-4 h-4 bg-accent rounded-full"></div>
                     <span className="text-foreground font-medium">Caution Zones</span>
                     <span className="text-muted-foreground">- Moderate risk, enhanced surveillance</span>
                   </div>
                   <div className="flex items-center gap-3">
-                    <div className="w-4 h-4 bg-red-500 rounded-full"></div>
+                    <div className="w-4 h-4 bg-destructive rounded-full"></div>
                     <span className="text-foreground font-medium">High Risk Zones</span>
                     <span className="text-muted-foreground">- Immediate alerts and response protocols</span>
                   </div>
                 </div>
               </div>
               <div className="h-[400px] rounded-lg overflow-hidden border">
-                <GeofenceMap className="w-full h-full" />
+                <Suspense fallback={<div className="w-full h-full flex items-center justify-center text-muted-foreground">Loading map…</div>}>
+                  <GeofenceMapLazy className="w-full h-full" />
+                </Suspense>
               </div>
             </div>
           </CardContent>
