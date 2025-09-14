@@ -39,12 +39,7 @@ const Hero3D = () => {
   }
 
   return (
-    <div className="h-[500px] w-full rounded-2xl overflow-hidden">
-      <Spline 
-        scene="https://prod.spline.design/eSo9YFci-1sasxdL/scene.splinecode"
-        onError={handleSplineError}
-      />
-    </div>
+    <FallbackHero />
   );
 };
 const GeofenceMapLazy = lazy(() => import("@/components/GeofenceMap").then(m => ({ default: m.GeofenceMap })));
