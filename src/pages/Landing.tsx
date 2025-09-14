@@ -83,10 +83,13 @@ const Landing = () => {
                 </span>
               </div>
               
-              <h1 className="text-5xl font-bold text-foreground leading-tight">
+              <h1 className="text-6xl font-bold text-foreground leading-tight mb-4">
+                Safe Tour AI
+              </h1>
+              <h2 className="text-3xl font-semibold text-muted-foreground leading-tight">
                 Incident Response with
                 <span className="text-primary"> Immutable Evidence</span>
-              </h1>
+              </h2>
               
               <p className="text-xl text-muted-foreground">
                 When tourists face emergencies, every second counts. Our system enables 
