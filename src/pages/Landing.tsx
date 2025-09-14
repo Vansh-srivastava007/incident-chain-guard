@@ -39,10 +39,15 @@ const Hero3D = () => {
   }
 
   return (
-    <FallbackHero />
+    <div className="h-[500px] w-full rounded-2xl overflow-hidden">
+      <Spline 
+        scene="https://prod.spline.design/eSo9YFci-1sasxdL/scene.splinecode"
+        onError={handleSplineError}
+      />
+    </div>
   );
 };
-const GeofenceMapLazy = lazy(() => import("@/components/GeofenceMap").then(m => ({ default: m.GeofenceMap })));
+const GeofenceMapLazy = lazy(() => import("@/components/GeofenceMapPreview").then(m => ({ default: m.GeofenceMapPreview })));
 const Landing = () => {
   const { user } = useAuth();
   const [showPermissionModal, setShowPermissionModal] = useState(false);
