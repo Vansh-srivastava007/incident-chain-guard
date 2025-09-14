@@ -183,9 +183,9 @@ const Landing = () => {
                 </p>
                 <div className="space-y-4">
                   <div className="flex items-center gap-3">
-                    <div className="w-4 h-4 bg-primary rounded-full"></div>
-                    <span className="text-foreground font-medium">Safe Zones</span>
-                    <span className="text-muted-foreground">- Low risk areas with active monitoring</span>
+                    <div className="w-4 h-4 bg-green-500 rounded-full"></div>
+                    <span className="text-foreground font-medium">Safe Zones (Green)</span>
+                    <span className="text-muted-foreground">- Low risk areas with active monitoring and safety</span>
                   </div>
                   <div className="flex items-center gap-3">
                     <div className="w-4 h-4 bg-accent rounded-full"></div>
