@@ -6,6 +6,7 @@ import { Link } from "react-router-dom";
 import { UserProfileButton } from "@/components/UserProfileButton";
 import { useAuth } from "@/hooks/useAuth";
 import { PermissionModal } from "@/components/PermissionModal";
+import { GeofenceMap } from "@/components/GeofenceMap";
 import Spline from '@splinetool/react-spline';
 
 // Fallback 3D-style hero element
@@ -168,44 +169,87 @@ const Landing = () => {
           </Card>
         </div>
 
-        {/* Demo Instructions */}
-        <Card className="bg-primary/5 border-primary/20">
+        {/* Geofencing Section */}
+        <Card className="mb-12">
           <CardContent className="p-8">
-            <h2 className="text-2xl font-bold mb-6 text-foreground">90-Second Demo Flow</h2>
+            <div className="grid lg:grid-cols-2 gap-8 items-center">
+              <div className="space-y-6">
+                <h2 className="text-3xl font-bold text-foreground">Smart Geofencing</h2>
+                <p className="text-lg text-muted-foreground">
+                  Our AI-powered geofencing system continuously monitors tourist locations and 
+                  automatically assesses risk levels based on real-time data, historical incidents, 
+                  and local safety conditions.
+                </p>
+                <div className="space-y-4">
+                  <div className="flex items-center gap-3">
+                    <div className="w-4 h-4 bg-green-500 rounded-full"></div>
+                    <span className="text-foreground font-medium">Safe Zones</span>
+                    <span className="text-muted-foreground">- Low risk areas with active monitoring</span>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <div className="w-4 h-4 bg-orange-500 rounded-full"></div>
+                    <span className="text-foreground font-medium">Caution Zones</span>
+                    <span className="text-muted-foreground">- Moderate risk, enhanced surveillance</span>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <div className="w-4 h-4 bg-red-500 rounded-full"></div>
+                    <span className="text-foreground font-medium">High Risk Zones</span>
+                    <span className="text-muted-foreground">- Immediate alerts and response protocols</span>
+                  </div>
+                </div>
+              </div>
+              <div className="h-[400px] rounded-lg overflow-hidden border">
+                <GeofenceMap className="w-full h-full" />
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* AI Workflow */}
+        <Card className="bg-primary/5 border-primary/20 mb-12">
+          <CardContent className="p-8">
+            <h2 className="text-2xl font-bold mb-6 text-foreground">90-Second AI Response Workflow</h2>
             <div className="space-y-4">
               <div className="flex items-start gap-4">
-                <div className="w-8 h-8 bg-primary text-primary-foreground rounded-full flex items-center justify-center font-bold text-sm flex-shrink-0">1</div>
+                <div className="w-10 h-10 bg-primary text-primary-foreground rounded-full flex items-center justify-center font-bold text-xs flex-shrink-0">15s</div>
                 <div>
-                  <h4 className="font-semibold text-foreground">Report an Incident</h4>
-                  <p className="text-muted-foreground">Fill out incident form, upload evidence, see hash generation</p>
+                  <h4 className="font-semibold text-foreground">Monitoring Agent Identifies Anomaly</h4>
+                  <p className="text-muted-foreground">AI continuously monitors geofenced areas and detects unusual patterns or incidents</p>
                 </div>
               </div>
               <div className="flex items-start gap-4">
-                <div className="w-8 h-8 bg-primary text-primary-foreground rounded-full flex items-center justify-center font-bold text-sm flex-shrink-0">2</div>
+                <div className="w-10 h-10 bg-primary text-primary-foreground rounded-full flex items-center justify-center font-bold text-xs flex-shrink-0">25s</div>
                 <div>
-                  <h4 className="font-semibold text-foreground">View on Operations Dashboard</h4>
-                  <p className="text-muted-foreground">See incident on map, check details, review evidence</p>
+                  <h4 className="font-semibold text-foreground">Geofence Validation</h4>
+                  <p className="text-muted-foreground">Confirms exact location coordinates and assesses risk level based on zone classification</p>
                 </div>
               </div>
               <div className="flex items-start gap-4">
-                <div className="w-8 h-8 bg-primary text-primary-foreground rounded-full flex items-center justify-center font-bold text-sm flex-shrink-0">3</div>
+                <div className="w-10 h-10 bg-primary text-primary-foreground rounded-full flex items-center justify-center font-bold text-xs flex-shrink-0">45s</div>
                 <div>
-                  <h4 className="font-semibold text-foreground">Simulate Emergency Response</h4>
-                  <p className="text-muted-foreground">Click "Call Police (Mock)" to see integration simulation</p>
+                  <h4 className="font-semibold text-foreground">Triage Agent Scores Incident</h4>
+                  <p className="text-muted-foreground">AI analyzes severity, bundles evidence, and prioritizes response based on threat level</p>
                 </div>
               </div>
               <div className="flex items-start gap-4">
-                <div className="w-8 h-8 bg-primary text-primary-foreground rounded-full flex items-center justify-center font-bold text-sm flex-shrink-0">4</div>
+                <div className="w-10 h-10 bg-primary text-primary-foreground rounded-full flex items-center justify-center font-bold text-xs flex-shrink-0">60s</div>
                 <div>
-                  <h4 className="font-semibold text-foreground">Anchor Evidence</h4>
-                  <p className="text-muted-foreground">Click "Anchor Evidence (Mock)" to see blockchain simulation</p>
+                  <h4 className="font-semibold text-foreground">Orchestration Agent Matches Responders</h4>
+                  <p className="text-muted-foreground">Identifies and contacts nearest qualified emergency responders and authorities</p>
                 </div>
               </div>
               <div className="flex items-start gap-4">
-                <div className="w-8 h-8 bg-primary text-primary-foreground rounded-full flex items-center justify-center font-bold text-sm flex-shrink-0">5</div>
+                <div className="w-10 h-10 bg-primary text-primary-foreground rounded-full flex items-center justify-center font-bold text-xs flex-shrink-0">75s</div>
                 <div>
-                  <h4 className="font-semibold text-foreground">Verify Hash Integrity</h4>
-                  <p className="text-muted-foreground">Click "Verify Hash" to confirm evidence hasn't been tampered with</p>
+                  <h4 className="font-semibold text-foreground">Blockchain Anchoring</h4>
+                  <p className="text-muted-foreground">Creates immutable record of incident data and evidence for legal accountability</p>
+                </div>
+              </div>
+              <div className="flex items-start gap-4">
+                <div className="w-10 h-10 bg-primary text-primary-foreground rounded-full flex items-center justify-center font-bold text-xs flex-shrink-0">90s</div>
+                <div>
+                  <h4 className="font-semibold text-foreground">Emergency Dispatch Coordination</h4>
+                  <p className="text-muted-foreground">Coordinates with responders en route, provides real-time updates and location data</p>
                 </div>
               </div>
             </div>
