@@ -50,13 +50,7 @@ const Landing = () => {
   const { user } = useAuth();
   const [showPermissionModal, setShowPermissionModal] = useState(false);
 
-  useEffect(() => {
-    // Show the permission modal when the page loads for the first time
-    const hasSeenPermissions = localStorage.getItem('hasSeenPermissions');
-    if (!hasSeenPermissions) {
-      setTimeout(() => setShowPermissionModal(true), 1000); // Show after 1 second
-    }
-  }, []);
+  // Permission modal will only show when "Start Demo" button is clicked
 
   const handlePermissionClose = () => {
     setShowPermissionModal(false);
